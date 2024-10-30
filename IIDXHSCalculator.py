@@ -1,5 +1,5 @@
-##VERSION 3.0
-import bisect
+##VERSION 3.1
+import math
 
 playstyle=[["Single","Double"],[298,335]]
 ps=0
@@ -34,26 +34,6 @@ Style("GOLD-EMPRESS",46,[("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2"
 Style("Sakura",70,[("HS0",1),("HS1",1.5),("HS2",2),("HS3",2.5),("HS4",3)]),
 Style("PSM",46,[("HS0",1),("HS1",1.5),("HS2",2),("HS3",2.5),("HS4",3)])
 ]
-    
-wnlist=[50,53,56,59,62,65,68,71,75,78,81,84,87,90,93,96,\
-        100,103,106,109,112,115,118,121,125,128,131,134,137,140,143,146,\
-        150,153,156,159,162,165,168,171,175,178,181,184,187,190,193,196,\
-        200,203,206,209,212,215,218,221,225,228,231,234,237,240,243,246,\
-        250,253,256,259,262,265,268,271,275,278,281,284,287,290,293,296,\
-        300,303,306,309,312,315,318,321,325,328,331,334,337,340,343,346,\
-        350,353,356,359,362,365,368,371,375,378,381,384,387,390,393,396,\
-        400,403,406,409,412,415,418,421,425,428,431,434,437,440,443,446,\
-        450,453,456,459,462,465,468,471,475,478,481,484,487,490,493,496,\
-        500,503,506,509,512,515,518,521,525,528,531,534,537,540,543,546,\
-        550,553,556,559,562,565,568,571,575,578,581,584,587,590,593,596,\
-        600,603,606,609,612,615,618,621,625,628,631,634,637,640,643,646,\
-        650,653,656,659,662,665,668,671,675,678,681,684,687,690,693,696,\
-        700,703,706,709,712,715,718,721,725,728,731,734,737,740,743,746,\
-        750,753,756,759,762,765,768,771,775,778,781,784,787,790,793,796,\
-        800,803,806,809,812,815,818,821,825,828,831,834,837,840,843,846,\
-        850,853,856,859,862,865,868,871,875,878,881,884,887,890,893,896,\
-        900,903,906,909,912,915,918,921,925,928,931,934,937,940,943,946,\
-        950,953,956,959,962,965,968,971,975,978,981,984,987,990,993,996,999]
 
 def intinput(s=""):
     while True:
@@ -72,11 +52,20 @@ def floatinput(s=""):
         if f:
             return float(i)
         print("Invalid input.")
-        
 
 def roundWhiteNumber(whiteNumber):
-    i=bisect.bisect_right(wnlist,whiteNumber)
-    return wnlist[i-1]
+    wn=50
+    while(True):
+        if wn+(25/8)>=whiteNumber:
+            return wn
+        else: wn+=25/8
+    # i=bisect.bisect_right(wnlist,whiteNumber)
+    # return wnlist[i-1]
+
+def displayWhiteNumber(whiteNumber):
+    if roundWhiteNumber(whiteNumber)==1000:
+        return 999
+    return math.floor(roundWhiteNumber(whiteNumber))
 
 def findWhiteNumber(bpm,hispeed,greenNumber):
     return 1000-((bpm*hispeed*greenNumber)/174)
@@ -99,7 +88,7 @@ def calculateHiSpeed():
         whiteNumber=findWhiteNumber(bpm,hispeed[1],playstyle[1][ps])
         if whiteNumber>=max(styles[s].getScreenLimit(),50):
             multiplier=f"(x{hispeed[1]})"
-            output.append(f"{hispeed[0]:<5} {multiplier:<7} WN = {roundWhiteNumber(whiteNumber)}")
+            output.append(f"{hispeed[0]:<5} {multiplier:<7} WN = {displayWhiteNumber(whiteNumber)}")
         else:
             if not hilighted:
                 if len(output)!=0:
@@ -144,7 +133,7 @@ def styleChoose():
     while True:
         print("-"*30)
         for i in range(len(styles)):
-            print(f"{i+1}. {styles[i].name}")
+            print(f"{str(i+1)+'.':>3} {styles[i].name}")
         n=intinput()
         if n>0 and n<=len(styles):
             return n-1
