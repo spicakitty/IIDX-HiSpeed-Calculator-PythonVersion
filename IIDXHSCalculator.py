@@ -1,10 +1,43 @@
-## VERSION 1.1
+## VERSION 2.0
 import bisect
-## gn=170000/(bpm*hs*(1000/(1000-wn-lift)))
+
+def intinput(s):
+    while True:
+        i=input(s)
+        if i.isnumeric: return int(i)
+        else: print("Invalid input.")
+
+def floatinput(s):
+    while True:
+        f=True
+        i=input(s)
+        for c in i:
+            if not (c.isnumeric or c=='.'):
+                f=False
+                break
+        if f:
+            return float(i)
+        print("Invalid input.")
+        
+playstyle=[["Single","Double"],[298,320]]
+ps=0
 displayoverlimit=True
 s=9
-screenlimits=[75,75,75,75,70,70,50,46,59,46,46,70]
-l=7
+screenlimits=[75,75,75,75,70,70,46,46,59,46,46,70]
+styles=["3rd","4th","5th","6th","7th","8th-9th","10th","IIDX RED","HAPPY SKY","DistorteD","GOLD-EMPRESS","Fast Songs"]
+hispeed=[[("LS2",round(1/3,2)),("LS1",1/2),("HS0",1),("HS1",2),("HS2",3),("HS3",4)],\
+        [("LS2",round(1/3,2)),("LS1",1/2),("HS0",1),("HS1",2),("HS2",2.75),("HS3",3.5)],\
+        [("LS2",round(1/3,2)),("LS1",1/2),("HS0",1),("HS1",2),("HS2",2.5),("HS3",3)],\
+        [("LS1",1/2),("HS0",1),("HS1",2),("HS2",2.5),("HS3",3),("HS4",3.5)],\
+        [("HS0",1),("HS1",2),("HS2",2.5),("HS3",3),("HS4",3.5)],\
+        [("HS0",1),("HS1",2),("HS2",2.5),("HS3",3),("HS4",3.5)],\
+        [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5)],\
+        [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
+        [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
+        [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
+        [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
+        [("HS0",1),("HS1",1.5),("HS2",2),("HS3",2.5),("HS4",3)]]
+# l=7
 wnlist=[50,53,56,59,62,65,68,71,75,78,81,84,87,90,93,96,\
         100,103,106,109,112,115,118,121,125,128,131,134,137,140,143,146,\
         150,153,156,159,162,165,168,171,175,178,181,184,187,190,193,196,\
@@ -24,21 +57,6 @@ wnlist=[50,53,56,59,62,65,68,71,75,78,81,84,87,90,93,96,\
         850,853,856,859,862,865,868,871,875,878,881,884,887,890,893,896,\
         900,903,906,909,912,915,918,921,925,928,931,934,937,940,943,946,\
         950,953,956,959,962,965,968,971,975,978,981,984,987,990,993,996,999]
-# HAPPY SKY = 59
-styles=["3rd","4th","5th","6th","7th","8th-9th","10th","IIDX RED","HAPPY SKY","DistorteD","GOLD-EMPRESS","Fast Songs"]
-
-hispeed=[[("LS2",round(1/3,2)),("LS1",1/2),("HS0",1),("HS1",2),("HS2",3),("HS3",4)],\
-    [("LS2",round(1/3,2)),("LS1",1/2),("HS0",1),("HS1",2),("HS2",2.75),("HS3",3.5)],\
-    [("LS2",round(1/3,2)),("LS1",1/2),("HS0",1),("HS1",2),("HS2",2.5),("HS3",3)],\
-    [("LS1",1/2),("HS0",1),("HS1",2),("HS2",2.5),("HS3",3),("HS4",3.5)],\
-    [("HS0",1),("HS1",2),("HS2",2.5),("HS3",3),("HS4",3.5)],\
-    [("HS0",1),("HS1",2),("HS2",2.5),("HS3",3),("HS4",3.5)],\
-    [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5)],\
-    [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
-    [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
-    [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
-    [("HS0",1),("HS0.5",1.5),("HS1",2),("HS1.5",2.25),("HS2",2.5),("HS2.5",2.75),("HS3",3),("HS3.5",3.25),("HS4",3.5),("HS4.5",3.75),("HS5",4)],\
-    [("HS0",1),("HS1",1.5),("HS2",2),("HS3",2.5),("HS4",3)]]
 
 def roundwn(wn):
     i=bisect.bisect_right(wnlist,wn)
@@ -60,10 +78,9 @@ def hscalc(s):
     output=[]
     hilighted=False
     print("-"*30)
-    gn=int(input("Green Number: "))
-    bpm=float(input("BPM: "))
+    bpm=floatinput("BPM: ")
     for hs in hispeed[s]:
-        wn=findwn(bpm,hs[1],gn)
+        wn=findwn(bpm,hs[1],playstyle[1][ps])
         if wn>=max([screenlimits[s],50]):
             m=f"(x{hs[1]})"
             output.append(f"{hs[0]:<5} {m:<7} WN = {roundwn(wn)}")
@@ -81,10 +98,9 @@ def towelcalc(s):
     output=[]
     hilighted=False
     print("-"*30)
-    gn=int(input("Green Number: "))
-    bpm=float(input("BPM: "))
+    bpm=floatinput("BPM: ")
     for hs in hispeed[s]:
-        wn=findwn(bpm,hs[1],gn)
+        wn=findwn(bpm,hs[1],playstyle[1][ps])
         if wn>=screenlimits[s]:
             m=f"(x{hs[1]})"
             output.append(f"{hs[0]:<5} {m:<7} Towel = {round(findtowel(wn),2)}")
@@ -100,10 +116,9 @@ def towelcalc(s):
 
 def maxbpmcalc(s):
     print("-"*30)
-    gn=int(input("Green Number: "))
     for hs in hispeed[s]:
         m=f"(x{hs[1]})"
-        print(f"{hs[0]:<5} {m:<7} --> {round(findbpm(gn,hs[1]),2)}")
+        print(f"{hs[0]:<5} {m:<7} --> {round(findbpm(playstyle[1][ps],hs[1]),2)}")
     return
 
 def stylechoose():
@@ -132,25 +147,43 @@ def stylechoose():
             if int(i)>0 and int(i)<13:
                 return int(i)-1
             else: print("Incorrect input")
-        
-        # if len(i)==1 and i in "12345678":
-        #     return int(i)-1
-        # else:
-        #     print("Incorrect input.")
 
+def settings():
+    global displayoverlimit
+    while True:
+        print("-"*30)
+        print(f"1. Change Singles GN ({playstyle[1][0]})")
+        print(f"2. Change Doubles GN ({playstyle[1][1]})")
+        print(f"3. Toggle displayoverlimit ({displayoverlimit})")
+        print("0. Return")
+        n=input()
+        if n=="1": playstyle[1][0]=intinput("Singles GN: ")
+        elif n=="2": playstyle[1][1]=intinput("Doubles GN: ")
+        elif n=="3":
+            if displayoverlimit: displayoverlimit=False
+            else: displayoverlimit=True
+        elif n=="0": return
+        else: print("Incorrect input.")
 
 while True:
     print("-"*30)
     print(f"Current style: {styles[s]}")
+    print(f"Current playstyle: {playstyle[0][ps]} ({playstyle[1][ps]})")
     print("1. Calculate Hi-Speed")
     print("2. Calculate Towel")
     print("3. Calculate Max BPM")
-    print("4. Change style")
-    print("5. Exit")
+    print("4. Toggle playstyle")
+    print("5. Change style")
+    print("6. Settings")
+    print("0. Exit")
     n=input()
     if n=="1": hscalc(s)
     elif n=="2": towelcalc(s)
     elif n=="3": maxbpmcalc(s)
-    elif n=="4": s=stylechoose()
-    elif n=="5": break
+    elif n=="4":
+        if ps: ps=0
+        else: ps=1
+    elif n=="5": s=stylechoose()
+    elif n=="6": settings()
+    elif n=="0": break
     else: print("Incorrect input.")
